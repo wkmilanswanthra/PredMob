@@ -15,7 +15,6 @@ import Header from "../../components/Header";
 import {auth} from "../../config/FirebaseConfig";
 
 function Home({navigation}) {
-    console.log('Home.js: ', auth.currentUser.email);
 
     const bestChoicesRedirect = () => {
         navigation.navigate('BestChoices')
@@ -105,6 +104,7 @@ const styles = StyleSheet.create({
     },
     cardImage: {
         maxWidth: '100%',
+        width: '100%',
         height: 100,
         borderRadius: 15,
         marginBottom: 10,

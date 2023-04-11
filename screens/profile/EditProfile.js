@@ -16,6 +16,8 @@ import {authContext} from "../../context/AuthContext";
 import {auth} from "../../config/FirebaseConfig";
 import {updateEmail, updateProfile} from "firebase/auth";
 import {isLoading} from "expo-font";
+import {sendRequest} from "../../utils/Request";
+import {URLS} from "../../config/urls";
 
 function EditProfile({navigation}) {
 
@@ -46,11 +48,21 @@ function EditProfile({navigation}) {
             return;
         }
 
-        updateEmail(auth.currentUser, email).then(() => {
-            setUserInfo({
+        updateEmail(auth.currentUser, email).then( async () => {
+
+            const body = {
+                'name': name,
+                'email': email,
+                'profileImg': imageURL
+            }
+
+            const updatedUser = await sendRequest('PUT', body, URLS.UPDATE_USER +'/'+ userInfo.id)
+
+            await setUserInfo({
                 ...userInfo,
-                email: email,
-                profileImg: 'https://robohash.org/'+email+'?set=set1&bgset=bg2&size=200x200'
+                name: updatedUser.data.user.name,
+                email: updatedUser.data.user.email,
+                profileImg: updatedUser.data.user.profileImg,
             });
             console.log(name, email, imageURL);
             setLoading(false);

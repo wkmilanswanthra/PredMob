@@ -6,7 +6,13 @@ import Colors from "../../assets/colors/Colors";
 import {authContext} from "../../context/AuthContext";
 import {signInWithEmailAndPassword} from 'firebase/auth'
 import {auth, provider} from "../../config/FirebaseConfig";
+import {URLS} from "../../config/urls";
+import {sendRequest} from "../../utils/Request";
+import * as Google from 'expo-auth-session/providers/google';
+import * as WebBrowser from 'expo-web-browser';
+import {constants} from "../../config/googleAuth";
 
+WebBrowser.maybeCompleteAuthSession();
 
 export default function LoginScreen({navigation}) {
 
@@ -17,13 +23,24 @@ export default function LoginScreen({navigation}) {
     const [showPassword, setShowPassword] = useState(false);
     const [rememberMe, setRememberMe] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [accessToken, setAccessToken] = useState(null);
+    const [request, response, promptAsync] = Google.useAuthRequest({
+        androidClientId: constants.ANDROID_ID,
+        iosClientId: constants.IOS_ID,
+        expoClientId: constants.WEB_ID,
+    });
 
     useEffect(() => {
         if (auth.currentUser) {
             setLoggedIn(true)
-            console.log('LoginScreen.js: ' + auth.currentUser.uid)
         }
     }, [])
+
+    useEffect(() => {
+        if (response?.type === "success") {
+            setAccessToken(response.authentication.accessToken);
+        }
+    }, [response, accessToken]);
 
     const handleLogin = () => {
         setLoading(true)
@@ -46,13 +63,18 @@ export default function LoginScreen({navigation}) {
             setLoading(false);
             return;
         }
-        signInWithEmailAndPassword(auth, email, password).then((userCredential) => {
-            setUserInfo({
+        signInWithEmailAndPassword(auth, email, password).then(async (userCredential) => {
+
+            const user = await sendRequest('GET', null, URLS.GET_USER +'/'+ userCredential.user.uid)
+            console.log(user.data.user)
+
+            await setUserInfo({
                 ...userInfo,
-                id: userCredential.user.uid,
-                name: email.split('@')[0],
-                email: userCredential.user.email,
-                profileImg: 'https://robohash.org/' + email + '?set=set1&bgset=bg2&size=200x200'
+                id: user.data.user._id,
+                name: user.data.user.name,
+                email: user.data.user.email,
+                profileImg: user.data.user.profileImg,
+                authMethod: 'email'
             })
         }).then(() => {
             setLoggedIn(true)
@@ -84,7 +106,37 @@ export default function LoginScreen({navigation}) {
     };
 
     async function signInWithGoogle() {
+        accessToken? getUserInfo(): await promptAsync({showInRecents: true});
     }
+
+    const getUserInfo = async () => {
+        setLoading(true)
+        try {
+            const response = await fetch(
+                "https://www.googleapis.com/userinfo/v2/me",
+                {
+                    headers: { Authorization: `Bearer ${accessToken}` },
+                }
+            );
+
+            const user = await response.json();
+            console.log(user)
+            await setUserInfo({
+                ...userInfo,
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                profileImg: user.picture,
+                authMethod: 'google'
+            })
+            await setLoggedIn(true);
+            setLoading(false)
+        } catch (error) {
+            console.log(error);
+            alert('Something went wrong!');
+            setLoading(false);
+        }
+    };
 
     return (
         <View style={styles.container}>
@@ -190,7 +242,7 @@ const styles = StyleSheet.create({
     toggleButton: {
         position: 'absolute',
         right: 5,
-        top: 12,
+        top: 5,
         padding: 8,
     },
     rememberMeContainer: {

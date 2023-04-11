@@ -1,20 +1,39 @@
-import React, {useState} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import {View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator} from 'react-native';
 import {Feather, Ionicons} from '@expo/vector-icons';
 import Colors from "../../assets/colors/Colors";
 import {authContext} from "../../context/AuthContext";
 import {createUserWithEmailAndPassword,} from "firebase/auth";
 import {auth} from "../../config/FirebaseConfig";
+import {sendRequest} from "../../utils/Request";
+import {URLS} from "../../config/urls";
+import * as Google from 'expo-auth-session/providers/google';
+import * as WebBrowser from 'expo-web-browser';
+import {constants} from "../../config/googleAuth";
+
+WebBrowser.maybeCompleteAuthSession();
 
 export default function SignUpScreen({navigation}) {
 
-    const {loggedIn, setLoggedIn, userInfo, setUserInfo} = React.useContext(authContext);
+    const {loggedIn, setLoggedIn, userInfo, setUserInfo} = useContext(authContext);
 
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [accessToken, setAccessToken] = useState(null);
+    const [request, response, promptAsync] = Google.useAuthRequest({
+        androidClientId: constants.ANDROID_ID,
+        iosClientId: constants.IOS_ID,
+        expoClientId: constants.WEB_ID,
+    });
+
+    useEffect(() => {
+        if (response?.type === "success") {
+            setAccessToken(response.authentication.accessToken);
+        }
+    }, [response, accessToken]);
 
     const handleSignUp = () => {
         setLoading(true);
@@ -38,20 +57,32 @@ export default function SignUpScreen({navigation}) {
             return;
         }
 
-        createUserWithEmailAndPassword(auth, email, password).then((userCredential) => {
-            setUserInfo({...userInfo,
-                id: userCredential.user.uid,
-                name: name,
-                email: userCredential.user.email,
-                profileImg: 'https://robohash.org/'+email+'?set=set1&bgset=bg2&size=200x200'
+        createUserWithEmailAndPassword(auth, email, password).then(async (userCredential) => {
+
+            const data = {
+                'name': name,
+                'email': email,
+                'profileImg': 'https://robohash.org/' + email + '?set=set1&bgset=bg2&size=200x200',
+                '_id': userCredential.user.uid
+            }
+
+            const newUser = await sendRequest('POST', data, URLS.CREATE_USER)
+            console.log(newUser.data.user)
+            await setUserInfo({
+                ...userInfo,
+                id: newUser.data.user._id,
+                name: newUser.data.user.name,
+                email: newUser.data.user.email,
+                profileImg: newUser.data.user.profileImg,
+                authMethod: 'email'
             });
+
         }).then((userCredential) => {
             setLoggedIn(true);
-            console.log(userInfo)
         }).catch((error) => {
             if (error.code === 'auth/email-already-in-use') {
                 alert('That email address is already in use!');
-            }else {
+            } else {
                 alert('Something went wrong!');
             }
             console.log(error)
@@ -59,6 +90,39 @@ export default function SignUpScreen({navigation}) {
         }).finally(() => {
             setLoading(false);
         });
+    };
+
+    async function signInWithGoogle() {
+        accessToken? getUserInfo(): await promptAsync({showInRecents: true});
+    }
+
+    const getUserInfo = async () => {
+        setLoading(true)
+        try {
+            const response = await fetch(
+                "https://www.googleapis.com/userinfo/v2/me",
+                {
+                    headers: { Authorization: `Bearer ${accessToken}` },
+                }
+            );
+
+            const user = await response.json();
+            console.log(user)
+            await setUserInfo({
+                ...userInfo,
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                profileImg: user.picture,
+                authMethod: 'google'
+            })
+            await setLoggedIn(true);
+            setLoading(false)
+        } catch (error) {
+            console.log(error);
+            alert('Something went wrong!');
+            setLoading(false);
+        }
     };
 
     const loginRedirect = () => {
@@ -109,7 +173,7 @@ export default function SignUpScreen({navigation}) {
             </View>
             <TouchableOpacity style={styles.button} onPress={handleSignUp}>
                 {loading && <ActivityIndicator size="small" color={Colors.dark}/>}
-                {!loading &&  <Text style={styles.buttonText}>Sign up</Text>}
+                {!loading && <Text style={styles.buttonText}>Sign up</Text>}
 
             </TouchableOpacity>
             <View style={styles.separatorContainer}>
@@ -117,7 +181,7 @@ export default function SignUpScreen({navigation}) {
                 <Text style={styles.separatorText}>Or continue with</Text>
                 <View style={styles.separatorLine}/>
             </View>
-            <TouchableOpacity style={[styles.button, styles.googleBtn]}>
+            <TouchableOpacity style={[styles.button, styles.googleBtn]} onPress={signInWithGoogle}>
                 <Text style={styles.buttonText}>Sign up with Google</Text>
                 <Ionicons style={{marginLeft: 10}} name="logo-google" size={20} color="#000"/>
             </TouchableOpacity>

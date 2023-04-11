@@ -3,19 +3,20 @@ import {View, Text, StyleSheet, StatusBar, SafeAreaView, Image, TouchableOpacity
 import Header from "../../components/Header";
 import Colors from "../../assets/colors/Colors";
 import {Ionicons} from "@expo/vector-icons";
+import * as Linking from 'expo-linking';
 
 function ContactUs({navigation}) {
 
     const clickContact = () => {
-
+        Linking.openURL('sms://+94712345678');
     }
 
     const clickEmail = () => {
-
+        Linking.openURL('mailto://test@email.com');
     }
 
     const clickGithub = () => {
-
+        Linking.openURL('https://github.com');
     }
 
     return (

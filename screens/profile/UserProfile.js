@@ -8,7 +8,7 @@ import {auth} from "../../config/FirebaseConfig";
 
 function UserProfile({navigation}) {
 
-    const {loggedIn, setLoggedIn, userInfo} = useContext(authContext);
+    const {loggedIn, setLoggedIn, userInfo, setUserInfo} = useContext(authContext);
 
 
     const handleEditProfile = () => {
@@ -28,6 +28,8 @@ function UserProfile({navigation}) {
             auth.signOut().then(() => {
                 console.log('User signed out!');
                 setLoggedIn(false);
+            }).then(async () => {
+                await setUserInfo({id: '', name: '', email: '', profileImg: '', authMethod: ''});
             }).catch((error) => {
                 console.log(error);
                 setLoggedIn(false);
@@ -42,11 +44,11 @@ function UserProfile({navigation}) {
                 <Image source={{uri: userInfo.profileImg}} style={styles.profileImage}/>
                 <Text style={styles.greetingText}>Hello, {userInfo.name}!</Text>
                 <View style={styles.optionsContainer}>
-                    <TouchableOpacity style={styles.button} onPress={handleEditProfile}>
+                    <TouchableOpacity style={styles.button} onPress={handleEditProfile} disabled={userInfo.authMethod==='google'}>
                         <Ionicons name={'create-outline'} style={styles.icon} size={25}></Ionicons>
                         <Text style={styles.buttonText}>Edit Profile</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.button} onPress={handleChangePassword}>
+                    <TouchableOpacity style={styles.button} onPress={handleChangePassword} disabled={userInfo.authMethod==='google'}>
                         <Ionicons name={'create-outline'} style={styles.icon} size={25}></Ionicons>
                         <Text style={styles.buttonText}>Change Password</Text>
                     </TouchableOpacity>
