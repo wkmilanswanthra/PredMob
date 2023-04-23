@@ -36,7 +36,7 @@ function Home({navigation}) {
                         placeholderTextColor="#C4C4C4"
                     />
                 </View>
-                <ScrollView s>
+                <ScrollView style={styles.scrollView}>
                     <TouchableOpacity style={styles.card} onPress={bestChoicesRedirect}>
                         <Image
                             source={require('../../assets/images/card_1.png')}
@@ -56,6 +56,16 @@ function Home({navigation}) {
                         <Text style={styles.cardTitle}>Under Average Players</Text>
                         <Text style={styles.cardDescription}>
                             Browse a list of players who have underperformed this season.
+                        </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.card} onPress={underAverageRedirect}>
+                        <Image
+                            source={require('../../assets/images/card-3.jpg')}
+                            style={styles.cardImage}
+                        />
+                        <Text style={styles.cardTitle}>Add a player</Text>
+                        <Text style={styles.cardDescription}>
+                            Adda a new player and get the predictions for the next season.
                         </Text>
                     </TouchableOpacity>
                 </ScrollView>
@@ -82,6 +92,10 @@ const styles = StyleSheet.create({
         marginBottom: 50,
         color: Colors.light,
         fontFamily: 'Poppins-Bold'
+    },
+    scrollView: {
+        marginTop: 10,
+        marginBottom: 65
     },
     searchContainer: {
         backgroundColor: Colors.light,
@@ -110,9 +124,9 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     cardTitle: {
-        fontSize: 25,
+        fontSize: 20,
         fontWeight: 'bold',
-        marginBottom: 10,
+        marginBottom: 5,
         color: Colors.light,
         fontFamily: 'Poppins'
     },

@@ -1,7 +1,9 @@
-const BASE_URL = 'https://c9be-2402-d000-a400-3af6-4817-68ed-5ae4-babd.ngrok-free.app';
+const BASE_URL_NODE = ' https://1108-2402-4000-20c0-1441-5d6e-e76-2d46-5b79.ngrok-free.app';
 
 export const URLS = {
-    CREATE_USER: BASE_URL+'/api/users/create',
-    GET_USER: BASE_URL+'/api/users/get',
-    UPDATE_USER: BASE_URL+'/api/users/update',
+    CREATE_USER: BASE_URL_NODE+'/api/users/create',
+    GET_USER: BASE_URL_NODE+'/api/users/get',
+    UPDATE_USER: BASE_URL_NODE+'/api/users/update',
+    PREDICT: BASE_URL_NODE+'/api/predict',
+    GET_DATA: BASE_URL_NODE+'/api/data',
 }

@@ -1,14 +1,18 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {StyleSheet, View, Text, StatusBar, ScrollView, TouchableOpacity, SafeAreaView} from 'react-native';
 import Header from "../../components/Header";
 import {Image} from "react-native-elements";
 import Colors from "../../assets/colors/Colors";
+import {authContext} from "../../context/AuthContext";
 
 function BestChoiceIndividual({navigation, route}) {
 
+    const {data} = useContext(authContext)
     const {position} = route.params;
+    // console.log(JSON.parse(data), 'data.position')
+    const [players, setPlayers] = React.useState([]);
 
-    const players = [
+    const p = [
         {rank: 1, name: 'Player 1', position: 'Forward', image: {uri: 'https://picsum.photos/200/200'}, team: 'Team Name', predictedPosition: 'Predicted Position'},
         {rank: 2, name: 'Player 2', position: 'Midfielder', image: {uri: 'https://picsum.photos/200/200'}, team: 'Team Name', predictedPosition: 'Predicted Position'},
         {rank: 3, name: 'Player 3', position: 'Defender', image: {uri: 'https://picsum.photos/200/200'}, team: 'Team Name', predictedPosition: 'Predicted Position'},
@@ -17,7 +21,8 @@ function BestChoiceIndividual({navigation, route}) {
         {rank: 6, name: 'Player 6', position: 'Defender', image: {uri: 'https://picsum.photos/200/200'}, team: 'Team Name', predictedPosition: 'Predicted Position'},
     ];
 
-    [players[0], players[1]] = [players[1], players[0]];
+
+    [p[0], p[1]] = [p[1], p[0]];
 
     const playerProfileRedirect = (player) => {
         navigation.navigate('BestChoicePlayerProfile', {player: player})
@@ -31,7 +36,7 @@ function BestChoiceIndividual({navigation, route}) {
                     <Text style={{fontFamily: 'Poppins-Bold', fontSize: 30}}>{'\n' + position}</Text>
                 </Text>
                 <View style={styles.topThreeContainer}>
-                    {players.map((player, index) => {
+                    {p.map((player, index) => {
                         if (index < 3) {
                             return (
                                 <TouchableOpacity key={index} style={styles.topThree} onPress={()=>playerProfileRedirect(player)}>
@@ -54,7 +59,7 @@ function BestChoiceIndividual({navigation, route}) {
                     })}
                 </View>
                 <ScrollView style={styles.scrollView}>
-                    {players.map((player, index) => {
+                    {p.map((player, index) => {
                         if (index >= 3) {
                             return (
                                 <View key={index} style={{flexDirection: 'column'}}>
