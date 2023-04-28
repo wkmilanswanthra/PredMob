@@ -5,21 +5,23 @@ import Colors from "../../assets/colors/Colors";
 
 function PlayerProfile({navigation, route}) {
 
-const {player} = route.params;
+    const {player} = route.params;
+    console.log(player)
 
     return (
         <SafeAreaView style={[styles.container, {marginTop: StatusBar.currentHeight}]}>
             <Header style={styles.header} navigation={navigation}/>
             <View style={styles.contentContainer}>
                 <Text style={styles.title}>{player.name}</Text>
-                <Image source={{uri: player.photo}} style={styles.image} />
+                <Image source={{uri: player.photo}} style={styles.image}/>
                 <ScrollView style={{marginBottom: 65}}>
                     <Text style={styles.text}>Team</Text>
                     <Text style={styles.details}>{player.team}</Text>
                     <Text style={styles.text}>Position</Text>
                     <Text style={styles.details}>{player.position}</Text>
                     <Text style={styles.text}>Age</Text>
-                    <Text style={styles.details}>{Math.floor((new Date() - new Date(player.date_of_birth)) / (365.25 * 24 * 60 * 60 * 1000))}</Text>
+                    <Text
+                        style={styles.details}>{Math.floor((new Date() - new Date(player.date_of_birth)) / (365.25 * 24 * 60 * 60 * 1000))}</Text>
                     <Text style={styles.text}>Shirt number</Text>
                     <Text style={styles.details}>{player.shirt_number}</Text>
                     <Text style={styles.text}>Height</Text>

@@ -25,7 +25,7 @@ function BestChoice({navigation}) {
             <View style={styles.contentContainer}>
                 <Text style={styles.title}>Best choice</Text>
                 <ScrollView style={styles.scrollView}>
-                    {data.map((item) => (
+                    {(data!==[]) && data.map((item) => (
                         <TouchableOpacity key={item.id} style={styles.card} onPress={()=>cardClick(item)}>
                             <Image source={item.image} style={styles.cardImage} />
                             <View style={{flexDirection: 'column'}}>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {
     StyleSheet,
     View,
@@ -13,8 +13,26 @@ import {
 import Colors from "../../assets/colors/Colors";
 import Header from "../../components/Header";
 import {auth} from "../../config/FirebaseConfig";
+import SelectDropdown from "react-native-select-dropdown";
+import {authContext} from "../../context/AuthContext";
+import axios from "axios";
+import {URLS} from "../../config/urls";
+import {Ionicons} from "@expo/vector-icons";
 
 function Home({navigation}) {
+
+    const {players} = useContext(authContext)
+    // console.log(players)
+    const [playersList , setPlayersList] = useState([{
+        name: 'No players available'
+    }])
+    useEffect(() => {
+        let x = []
+        for (let i = 0; i < players.length; i++) {
+            x.push(players[i].name)
+        }
+        setPlayersList(x)
+    },[])
 
     const bestChoicesRedirect = () => {
         navigation.navigate('BestChoices')
@@ -34,10 +52,26 @@ function Home({navigation}) {
             <View style={styles.contentContainer}>
                 <Text style={styles.title}>Discover</Text>
                 <View style={styles.searchContainer}>
-                    <TextInput
-                        style={styles.searchInput}
-                        placeholder="Search"
-                        placeholderTextColor="#C4C4C4"
+                    <SelectDropdown
+                        buttonStyle={styles.selectButton}
+                        defaultButtonText={'Search Player'}
+                        buttonTextStyle={styles.buttonText}
+                        searchPlaceHolder={'Search players'}
+                        search={true}
+                        data={playersList}
+                        renderSearchInputRightIcon={() => {
+                            return (<Ionicons name={'search'} style={styles.icon} size={25} color={'#333'}></Ionicons>)
+                        }}
+                        onSelect={(selectedItem, index) => {
+                            if(selectedItem==='No players available')return
+                            navigation.navigate('PlayerProfile', {player: players[index]})
+                        }}
+                        buttonTextAfterSelection={(selectedItem, index) => {
+                            return selectedItem
+                        }}
+                        rowTextForSelection={(item, index) => {
+                            return item
+                        }}
                     />
                 </View>
                 <ScrollView style={styles.scrollView}>
@@ -102,12 +136,9 @@ const styles = StyleSheet.create({
         marginBottom: 65
     },
     searchContainer: {
-        backgroundColor: Colors.light,
         borderRadius: 15,
-        height: 40,
         justifyContent: 'center',
-        paddingHorizontal: 20,
-        marginBottom: 50,
+        marginBottom: 20,
     },
     searchInput: {
         fontSize: 15,
@@ -138,6 +169,20 @@ const styles = StyleSheet.create({
         color: Colors.light,
         fontSize: 12,
         fontFamily: 'Poppins'
+    },
+    selectButton: {
+        backgroundColor: Colors.light,
+        width: '100%',
+        borderRadius: 15,
+        marginBottom: 16,
+        paddingHorizontal: 16,
+        paddingVertical: 10,
+    },
+    buttonText: {
+        color: Colors.dark,
+        textAlign: 'left',
+        fontSize: 15,
+        fontFamily: 'Poppins',
     },
 });
 

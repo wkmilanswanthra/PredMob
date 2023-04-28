@@ -1,4 +1,4 @@
-const BASE_URL_NODE = 'https://e9ec-2402-d000-a400-7a04-ec3d-5c16-7ab7-a06e.ngrok-free.app';
+const BASE_URL_NODE = 'https://d1be-212-104-225-33.ngrok-free.app';
 
 export const URLS = {
     CREATE_USER: BASE_URL_NODE+'/api/users/create',

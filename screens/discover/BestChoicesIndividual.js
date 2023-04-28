@@ -38,7 +38,7 @@ function BestChoiceIndividual({navigation, route}) {
                     <Text style={{fontFamily: 'Poppins-Bold', fontSize: 30}}>{'\n' + position}</Text>
                 </Text>
                 <View style={styles.topThreeContainer}>
-                    {players.map((player, index) => {
+                    {players && players.map((player, index) => {
                         if (index < 3) {
                             return (
                                 <TouchableOpacity key={index} style={styles.topThree}

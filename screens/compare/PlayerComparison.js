@@ -54,7 +54,6 @@ function PlayerComparison({navigation}) {
                             return selectedItem
                         }}
                         rowTextForSelection={(item, index) => {
-                            // if data array is an array of objects then return item.property to represent item in dropdown
                             return item
                         }}
                     />

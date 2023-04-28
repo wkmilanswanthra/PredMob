@@ -37,13 +37,13 @@ function PositionSingle({navigation, route}) {
                     </View>
                     <Text style={styles.description}>{position.description}</Text>
                 </View>
-                <FlatList
+                {altData && <FlatList
                     style={{marginBottom: 40, backgroundColor: Colors.bottomBar}}
                     data={players}
                     keyExtractor={(item) => item.id.toString()}
                     renderItem={({item}) => (
                         <>
-                            <TouchableOpacity style={styles.listItem} onPress={()=>listItemClick(item)}>
+                            <TouchableOpacity style={styles.listItem} onPress={() => listItemClick(item)}>
                                 <Text style={styles.listName}>{item.name}</Text>
                                 <Text style={styles.listTeam}>{item.team}</Text>
                                 <Text style={styles.listPosition}>{item.position}</Text>
@@ -51,7 +51,7 @@ function PositionSingle({navigation, route}) {
                             <View style={styles.separator}/>
                         </>
                     )}
-                />
+                />}
             </View>
         </SafeAreaView>
 

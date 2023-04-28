@@ -7,10 +7,10 @@ function AuthContextProvider(props) {
     const [userInfo, setUserInfo] = useState({ id: '', name: '', email: '', profileImg: '', authMethod: ''});
     const [bestChoiceData, setBestChoiceData] = useState({});
     const [altData, setAltData] = useState({});
-    // const [data, setData] = useState({});
+    const [players, setPlayers] = useState({});
 
     return (
-        <authContext.Provider value={{ loggedIn, setLoggedIn, userInfo, setUserInfo, bestChoiceData, setBestChoiceData, altData, setAltData }}>
+        <authContext.Provider value={{ loggedIn, setLoggedIn, userInfo, setUserInfo, bestChoiceData, setBestChoiceData, altData, setAltData, players, setPlayers }}>
             {props.children}
         </authContext.Provider>
     );

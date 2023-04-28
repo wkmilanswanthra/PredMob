@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet, StatusBar, SafeAreaView, Image, TouchableOpacity} from 'react-native';
+import {View, Text, StyleSheet, StatusBar, SafeAreaView, Image, TouchableOpacity, ScrollView} from 'react-native';
 import Header from "../../components/Header";
 import Colors from "../../assets/colors/Colors";
 import {Ionicons} from "@expo/vector-icons";
@@ -8,15 +8,23 @@ import * as Linking from 'expo-linking';
 function ContactUs({navigation}) {
 
     const clickContact = () => {
-        Linking.openURL('sms://+94712345678');
+        Linking.openURL('sms://+94774484560');
     }
 
     const clickEmail = () => {
-        Linking.openURL('mailto://test@email.com');
+        Linking.openURL('mailto://chamikarakariyapperuma@gmail.com');
     }
 
     const clickGithub = () => {
-        Linking.openURL('https://github.com');
+        Linking.openURL('https://github.com/chamikarak');
+    }
+
+    const clickLinkedIn = () => {
+        Linking.openURL('http://www.linkedin.com/in/chamikarakariyapperuma');
+    }
+
+    const clickPortfolio = () => {
+        Linking.openURL('https://chamikarak.github.io/Portfolio/');
     }
 
     return (
@@ -25,33 +33,41 @@ function ContactUs({navigation}) {
             <View style={styles.contentContainer}>
                 <Text style={styles.title}>Contact us</Text>
                 <Image
-                    source={{uri: 'https://picsum.photos/200'}}
+                    source={{uri: 'https://chamikarak.github.io/Portfolio/images/myphoto.jpg'}}
                     style={styles.image}
                 />
                 <Text style={styles.name}>Chamikara Kariyapperuma</Text>
-                <Text style={styles.description}>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Duis efficitur diam vel diam cursus, eu ultricies nisi fringilla.
-                    Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
-                </Text>
-                <TouchableOpacity style={styles.contactBtn} onPress={clickContact}>
+                <ScrollView style={{marginBottom: 65}}><TouchableOpacity style={styles.contactBtn}
+                                                                         onPress={clickContact}>
                     <Text style={styles.buttonText}>Contact</Text>
                     <View style={styles.iconContainer}>
-                        <Ionicons name="call" size={20} color="#000" />
+                        <Ionicons name="call" size={20} color="#000"/>
                     </View>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.contactBtn} onPress={clickEmail}>
-                    <Text style={styles.buttonText}>Email</Text>
-                    <View style={styles.iconContainer}>
-                        <Ionicons name="mail" size={20} color="#000" />
-                    </View>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.contactBtn} onPress={clickGithub}>
-                    <Text style={styles.buttonText}>Github</Text>
-                    <View style={styles.iconContainer}>
-                        <Ionicons name="logo-github" size={20} color="#000" />
-                    </View>
-                </TouchableOpacity>
+                    <TouchableOpacity style={styles.contactBtn} onPress={clickEmail}>
+                        <Text style={styles.buttonText}>Email</Text>
+                        <View style={styles.iconContainer}>
+                            <Ionicons name="mail" size={20} color="#000"/>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.contactBtn} onPress={clickGithub}>
+                        <Text style={styles.buttonText}>Github</Text>
+                        <View style={styles.iconContainer}>
+                            <Ionicons name="logo-github" size={20} color="#000"/>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.contactBtn} onPress={clickPortfolio}>
+                        <Text style={styles.buttonText}>Portfolio</Text>
+                        <View style={styles.iconContainer}>
+                            <Ionicons name="code-slash-outline" size={20} color="#000"/>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.contactBtn} onPress={clickLinkedIn}>
+                        <Text style={styles.buttonText}>LinkIn</Text>
+                        <View style={styles.iconContainer}>
+                            <Ionicons name="logo-linkedin" size={20} color="#000"/>
+                        </View>
+                    </TouchableOpacity></ScrollView>
             </View>
         </SafeAreaView>
     );
@@ -86,7 +102,7 @@ const styles = StyleSheet.create({
         borderColor: Colors.highlight,
         alignSelf: 'center',
     },
-    name:{
+    name: {
         textAlign: 'center',
         fontSize: 24,
         fontWeight: 'bold',
@@ -96,15 +112,15 @@ const styles = StyleSheet.create({
     },
     description: {
         textAlign: 'justify',
-        fontSize: 16,
+        fontSize: 13,
         lineHeight: 24,
         color: Colors.light,
         paddingHorizontal: 10,
         fontFamily: 'Poppins',
-        marginBottom: 50,
+        marginBottom: 30,
 
     },
-    buttonText:{
+    buttonText: {
         color: Colors.dark,
         textAlign: 'center',
         fontSize: 12,

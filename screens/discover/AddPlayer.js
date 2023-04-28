@@ -162,6 +162,7 @@ function AddPlayer({navigation}){
                             key={category}
                             style={styles.input}
                             placeholder={category.replace(/_/g, " ")}
+                            placeholderTextColor={"#9f9f9f"}
                             keyboardType="numeric"
                             onChangeText={(value) => handleInputChange(category, value)}
                         />

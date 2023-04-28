@@ -16,16 +16,18 @@ import {URLS} from "../config/urls";
 const Tab = createBottomTabNavigator();
 
 function BottomTabs() {
-    const {setBestChoiceData, setAltData} = useContext(authContext);
+    const {setBestChoiceData, setAltData, setPlayers} = useContext(authContext);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         async function fetchData() {
             try {
-                const bestChoice = await axios.get(URLS.GET_DATA);
-                const altData = await axios.get(URLS.GET_ALT_DATA);
+                const bestChoice = await axios.get(URLS.GET_DATA, {timeout: 10000});
+                const altData = await axios.get(URLS.GET_ALT_DATA,{timeout: 10000});
+                const players = await axios.get(URLS.COMPARISON,{timeout: 10000});
                 setBestChoiceData(bestChoice.data);
                 setAltData(altData.data);
+                players && setPlayers(players.data.players[0]);
                 setIsLoading(false);
             } catch (e) {
                 console.log(e);

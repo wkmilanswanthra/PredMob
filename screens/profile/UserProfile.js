@@ -40,7 +40,7 @@ function UserProfile({navigation}) {
             <Header style={styles.header} navigation={navigation}/>
             <View style={styles.contentContainer}>
                 <Image source={{uri: userInfo.profileImg}} style={styles.profileImage}/>
-                <Text style={styles.greetingText}>Hello, {userInfo.name}!</Text>
+                <Text style={styles.greetingText}>Hello, {userInfo && userInfo.name}!</Text>
                 <View style={styles.optionsContainer}>
                     <TouchableOpacity style={styles.button} onPress={handleEditProfile} disabled={userInfo.authMethod==='google'}>
                         <Ionicons name={'create-outline'} style={styles.icon} size={25}></Ionicons>
