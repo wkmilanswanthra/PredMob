@@ -16,7 +16,7 @@ function BestChoicePlayerProfile({navigation, route}) {
             <Header style={styles.header} navigation={navigation}/>
             <View style={styles.contentContainer}>
                 <Text style={styles.title}>{`Rank ${player.rank}`}</Text>
-                <Image source={player.image} style={styles.profilePic}/>
+                <Image source={{uri: player.photo}} style={styles.profilePic}/>
                 <Text style={styles.name}>{player.name}</Text>
                 <Text style={styles.team}>{player.team}</Text>
                 <View style={styles.currentPositionsContainer}>
@@ -25,7 +25,7 @@ function BestChoicePlayerProfile({navigation, route}) {
                 </View>
                 <View style={styles.predictedPositionsContainer}>
                     <Text style={styles.predictedPositionsTitle}>Predicted Position:</Text>
-                    <Text style={styles.predictedPosition}>{player.predictedPosition}</Text>
+                    <Text style={styles.predictedPosition}>{player.predicted_position}</Text>
                 </View>
                 <TouchableOpacity style={styles.profileLinkContainer} onPress={playerProfileRedirect}>
                     <Text style={styles.profileLink}>Click to view the player profile</Text>

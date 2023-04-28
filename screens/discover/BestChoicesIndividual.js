@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {StyleSheet, View, Text, StatusBar, ScrollView, TouchableOpacity, SafeAreaView} from 'react-native';
 import Header from "../../components/Header";
 import {Image} from "react-native-elements";
@@ -7,22 +7,24 @@ import {authContext} from "../../context/AuthContext";
 
 function BestChoiceIndividual({navigation, route}) {
 
-    const {data} = useContext(authContext)
+    const {bestChoiceData} = useContext(authContext)
+
+    const positionDataMap = {
+        'Goalkeeper': bestChoiceData.goalkeepers,
+        'Midfielder': bestChoiceData.midfielders,
+        'Defender': bestChoiceData.defenders,
+        'Forward': bestChoiceData.forwards
+    };
+
     const {position} = route.params;
-    // console.log(JSON.parse(data), 'data.position')
-    const [players, setPlayers] = React.useState([]);
 
-    const p = [
-        {rank: 1, name: 'Player 1', position: 'Forward', image: {uri: 'https://picsum.photos/200/200'}, team: 'Team Name', predictedPosition: 'Predicted Position'},
-        {rank: 2, name: 'Player 2', position: 'Midfielder', image: {uri: 'https://picsum.photos/200/200'}, team: 'Team Name', predictedPosition: 'Predicted Position'},
-        {rank: 3, name: 'Player 3', position: 'Defender', image: {uri: 'https://picsum.photos/200/200'}, team: 'Team Name', predictedPosition: 'Predicted Position'},
-        {rank: 4, name: 'Player 4', position: 'Forward', image: {uri: 'https://picsum.photos/200/200'}, team: 'Team Name', predictedPosition: 'Predicted Position'},
-        {rank: 5, name: 'Player 5', position: 'Midfielder', image: {uri: 'https://picsum.photos/200/200'}, team: 'Team Name', predictedPosition: 'Predicted Position'},
-        {rank: 6, name: 'Player 6', position: 'Defender', image: {uri: 'https://picsum.photos/200/200'}, team: 'Team Name', predictedPosition: 'Predicted Position'},
-    ];
+    const [players, setPlayers] = React.useState(positionDataMap[position] || []);
 
+    for (let i = 0; i < players.length; i++) {
+        players[i].rank = i + 1;
+    }
 
-    [p[0], p[1]] = [p[1], p[0]];
+    [players[0], players[1]] = [players[1], players[0]];
 
     const playerProfileRedirect = (player) => {
         navigation.navigate('BestChoicePlayerProfile', {player: player})
@@ -36,38 +38,40 @@ function BestChoiceIndividual({navigation, route}) {
                     <Text style={{fontFamily: 'Poppins-Bold', fontSize: 30}}>{'\n' + position}</Text>
                 </Text>
                 <View style={styles.topThreeContainer}>
-                    {p.map((player, index) => {
+                    {players.map((player, index) => {
                         if (index < 3) {
                             return (
-                                <TouchableOpacity key={index} style={styles.topThree} onPress={()=>playerProfileRedirect(player)}>
-                                    <Image source={player.image} style={[
+                                <TouchableOpacity key={index} style={styles.topThree}
+                                                  onPress={() => playerProfileRedirect(player)}>
+                                    <Image source={{uri: player.photo}} style={[
                                         index === 0 ? styles.rankTwoImage : null,
                                         index === 1 ? styles.rankOneImage : null,
                                         index === 2 ? styles.rankThreeImage : null,]
                                     }/>
                                     <View style={styles.topThreeInfoContainer}>
-                                        <Text style={styles.topThreeName}>{player.name}</Text>
+                                        <Text style={styles.topThreeName} numberOfLines={1}>{player.name}</Text>
                                         <Text style={styles.topThreePosition}>{player.position}</Text>
                                     </View>
                                     <View style={styles.topThreeRankContainer}>
                                         <Text style={styles.topThreeRank}>{player.rank}</Text>
                                     </View>
-                                    {(index===1)? <View style={styles.rankOneBg}/>: null}
+                                    {(index === 1) ? <View style={styles.rankOneBg}/> : null}
                                 </TouchableOpacity>
                             )
                         }
                     })}
                 </View>
                 <ScrollView style={styles.scrollView}>
-                    {p.map((player, index) => {
+                    {players.map((player, index) => {
                         if (index >= 3) {
                             return (
                                 <View key={index} style={{flexDirection: 'column'}}>
-                                    <TouchableOpacity style={styles.playerContainer} onPress={()=>playerProfileRedirect(player)}>
+                                    <TouchableOpacity style={styles.playerContainer}
+                                                      onPress={() => playerProfileRedirect(player)}>
                                         <View style={styles.rankContainer}>
                                             <Text style={styles.rank}>{player.rank}</Text>
                                         </View>
-                                        <Image source={player.image} style={styles.image}/>
+                                        <Image source={{uri: player.photo}} style={styles.image}/>
                                         <View style={styles.infoContainer}>
                                             <Text style={styles.name}>{player.name}</Text>
                                             <Text style={styles.position}>{player.position}</Text>
@@ -126,7 +130,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        paddingVertical: 10,
+        paddingVertical: 5,
         borderRadius: 10,
         marginBottom: 7.5,
         marginTop: 7.5,

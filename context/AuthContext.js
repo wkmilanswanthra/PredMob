@@ -5,10 +5,12 @@ export const authContext = createContext(null);
 function AuthContextProvider(props) {
     const [loggedIn, setLoggedIn] = useState(false);
     const [userInfo, setUserInfo] = useState({ id: '', name: '', email: '', profileImg: '', authMethod: ''});
-    const [data, setData] = useState({});
+    const [bestChoiceData, setBestChoiceData] = useState({});
+    const [altData, setAltData] = useState({});
+    // const [data, setData] = useState({});
 
     return (
-        <authContext.Provider value={{ loggedIn, setLoggedIn, userInfo, setUserInfo, data, setData }}>
+        <authContext.Provider value={{ loggedIn, setLoggedIn, userInfo, setUserInfo, bestChoiceData, setBestChoiceData, altData, setAltData }}>
             {props.children}
         </authContext.Provider>
     );

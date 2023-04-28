@@ -16,15 +16,16 @@ import {URLS} from "../config/urls";
 const Tab = createBottomTabNavigator();
 
 function BottomTabs() {
-    console.log('BottomTabs.js: ');
-    const {data, setData} = useContext(authContext);
+    const {setBestChoiceData, setAltData} = useContext(authContext);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         async function fetchData() {
             try {
-                const response = await axios.get(URLS.GET_DATA);
-                setData(response.data);
+                const bestChoice = await axios.get(URLS.GET_DATA);
+                const altData = await axios.get(URLS.GET_ALT_DATA);
+                setBestChoiceData(bestChoice.data);
+                setAltData(altData.data);
                 setIsLoading(false);
             } catch (e) {
                 console.log(e);

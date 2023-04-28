@@ -12,20 +12,20 @@ const {player} = route.params;
             <Header style={styles.header} navigation={navigation}/>
             <View style={styles.contentContainer}>
                 <Text style={styles.title}>{player.name}</Text>
-                <Image source={{ uri: 'https://picsum.photos/200/200' }} style={styles.image} />
+                <Image source={{uri: player.photo}} style={styles.image} />
                 <ScrollView style={{marginBottom: 65}}>
                     <Text style={styles.text}>Team</Text>
                     <Text style={styles.details}>{player.team}</Text>
                     <Text style={styles.text}>Position</Text>
                     <Text style={styles.details}>{player.position}</Text>
                     <Text style={styles.text}>Age</Text>
-                    <Text style={styles.details}>{player.age}</Text>
-                    <Text style={styles.text}>Nationality</Text>
-                    <Text style={styles.details}>{player.nationality}</Text>
+                    <Text style={styles.details}>{Math.floor((new Date() - new Date(player.date_of_birth)) / (365.25 * 24 * 60 * 60 * 1000))}</Text>
+                    <Text style={styles.text}>Shirt number</Text>
+                    <Text style={styles.details}>{player.shirt_number}</Text>
                     <Text style={styles.text}>Height</Text>
-                    <Text style={styles.details}>{player.height}</Text>
+                    <Text style={styles.details}>{player.height} cm</Text>
                     <Text style={styles.text}>Weight</Text>
-                    <Text style={styles.details}>{player.weight}</Text>
+                    <Text style={styles.details}>{player.weight} kg</Text>
                 </ScrollView>
             </View>
         </SafeAreaView>

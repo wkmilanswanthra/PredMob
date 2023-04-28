@@ -8,7 +8,6 @@ import AuthNavigator from "./AuthNavigator";
 
 function MainNavigator() {
     const {loggedIn, setLoggedIn, userInfo, setUserInfo} = useContext(authContext);
-    console.log('MainNavigator.js: ')
 
     return (
             <NavigationContainer style={styles.container}>

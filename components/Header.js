@@ -4,7 +4,6 @@ import {Ionicons} from '@expo/vector-icons';
 import Colors from "../assets/colors/Colors";
 
 function Header({navigation}) {
-    console.log('Navigation Can go back ? : ',navigation.canGoBack());
     return (<View style={styles.header}>
             {navigation.canGoBack() && <TouchableOpacity onPress={() => navigation.goBack()}>
                 <Ionicons name="chevron-back" size={24} color={Colors.highlight}/>

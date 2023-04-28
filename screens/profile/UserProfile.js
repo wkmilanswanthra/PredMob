@@ -25,14 +25,12 @@ function UserProfile({navigation}) {
 
     const handleLogout = () => {
         if (loggedIn) {
-            auth.signOut().then(() => {
+            auth.signOut().then(async () => {
                 console.log('User signed out!');
-                setLoggedIn(false);
-            }).then(async () => {
                 await setUserInfo({id: '', name: '', email: '', profileImg: '', authMethod: ''});
+                setLoggedIn(false);
             }).catch((error) => {
                 console.log(error);
-                setLoggedIn(false);
             });
         }
     };

@@ -3,18 +3,21 @@ import {StyleSheet, View, Text, StatusBar, SafeAreaView, TouchableOpacity, FlatL
 import Header from "../../components/Header";
 import Colors from "../../assets/colors/Colors";
 import {Image} from "react-native-elements";
+import {authContext} from "../../context/AuthContext";
 
 function PositionSingle({navigation, route}) {
 
+    const {altData} = React.useContext(authContext)
     const {position} = route.params;
 
-    const players = [
-        {id: 1, name: 'Player A', team: 'Team 1', position: 'Forward'},
-        {id: 2, name: 'Player B', team: 'Team 2', position: 'Midfielder'},
-        {id: 3, name: 'Player C', team: 'Team 3', position: 'Defender'},
-        {id: 4, name: 'Player D', team: 'Team 4', position: 'Goalkeeper'},
-        {id: 5, name: 'Player E', team: 'Team 5', position: 'Forward'},
-    ];
+    const positionDataMap = {
+        'Goalkeeper': altData.goalkeepers.top,
+        'Midfielder': altData.midfielders.top,
+        'Defender': altData.defenders.top,
+        'Forward': altData.forwards.top
+    };
+
+    const [players, setPlayers] = React.useState(positionDataMap[position.position] || []);
 
     const listItemClick = (item) => {
         navigation.navigate('PlayerProfile', {player: item})
@@ -32,8 +35,7 @@ function PositionSingle({navigation, route}) {
                             <Text style={styles.position}>{position.position}</Text>
                         </View>
                     </View>
-                    <Text style={styles.description}>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Beatae,
-                        quo.</Text>
+                    <Text style={styles.description}>{position.description}</Text>
                 </View>
                 <FlatList
                     style={{marginBottom: 40, backgroundColor: Colors.bottomBar}}

@@ -24,6 +24,10 @@ function Home({navigation}) {
         navigation.navigate('UnderAveragePLayers')
     }
 
+    const addPlayerRedirect = () => {
+        navigation.navigate('AddPlayer')
+    }
+
     return (
         <SafeAreaView style={[styles.container, {marginTop: StatusBar.currentHeight}]}>
             <Header style={styles.header} navigation={navigation}/>
@@ -58,7 +62,7 @@ function Home({navigation}) {
                             Browse a list of players who have underperformed this season.
                         </Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.card} onPress={underAverageRedirect}>
+                    <TouchableOpacity style={[styles.card, {backgroundColor: '#6C5ECF'}]} onPress={addPlayerRedirect}>
                         <Image
                             source={require('../../assets/images/card-3.jpg')}
                             style={styles.cardImage}

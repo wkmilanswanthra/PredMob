@@ -6,12 +6,12 @@ import BestChoice from "../screens/discover/BestChoicesIndividual";
 import BestChoicePlayerProfile from "../screens/discover/BestChoicePlayerProfile";
 import UnderAveragePLayers from "../screens/discover/UnderAveragePlayers";
 import PlayerProfile from "../screens/common/PlayerProfile";
+import AddPlayer from "../screens/discover/AddPlayer";
 import UnderAveragePlayerIndividual from "../screens/discover/UnderAveragePlayerIndividual";
 
 const Stack = createStackNavigator();
 
 export default function HomeStack() {
-    console.log('HomeStack.js: ')
     return (
         <Stack.Navigator
         initialRouteName={'Home'}
@@ -22,6 +22,7 @@ export default function HomeStack() {
             <Stack.Screen name="BestChoicePlayerProfile" component={BestChoicePlayerProfile} />
             <Stack.Screen name="UnderAveragePLayers" component={UnderAveragePLayers} />
             <Stack.Screen name="UnderAveragePlayerIndividual" component={UnderAveragePlayerIndividual} />
+            <Stack.Screen name="AddPlayer" component={AddPlayer} />
             <Stack.Screen name="PlayerProfile" component={PlayerProfile} />
         </Stack.Navigator>
     );

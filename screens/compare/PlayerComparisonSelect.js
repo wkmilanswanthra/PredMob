@@ -14,33 +14,33 @@ function PLayerComparisonSelect({navigation, route}) {
                 <Text style={styles.title}>Player Comparison</Text>
                 <View style={styles.playersContainer}>
                     <View style={styles.playerContainer}>
-                        <Image style={styles.playerImage} source={{ uri: 'https://picsum.photos/200/200' }} />
-                        <Text style={styles.playerName} numberOfLines={1}>{player1}</Text>
+                        <Image style={styles.playerImage} source={{ uri: player1.photo }} />
+                        <Text style={styles.playerName} numberOfLines={1}>{player1.name}</Text>
                         <Text style={styles.playerStatsTitle}>Position</Text>
-                        <Text style={styles.playerStats} numberOfLines={1}>Defender</Text>
+                        <Text style={styles.playerStats} numberOfLines={1}>{player1.position}</Text>
                         <Text style={styles.playerStatsTitle}>Age</Text>
-                        <Text style={styles.playerStats} numberOfLines={1}>23</Text>
+                        <Text style={styles.playerStats} numberOfLines={1}>{Math.floor((new Date() - new Date(player1.date_of_birth)) / 31557600000)}</Text>
                         <Text style={styles.playerStatsTitle}>Height</Text>
-                        <Text style={styles.playerStats} numberOfLines={1}>5' 11"</Text>
+                        <Text style={styles.playerStats} numberOfLines={1}>{player1.height} cm</Text>
                         <Text style={styles.playerStatsTitle}>Weight</Text>
-                        <Text style={styles.playerStats} numberOfLines={1}>80kg</Text>
+                        <Text style={styles.playerStats} numberOfLines={1}>{player1.weight} kg</Text>
                         <Text style={styles.playerStatsTitle}>Goals</Text>
-                        <Text style={styles.playerStats} numberOfLines={1}>190</Text>
+                        <Text style={styles.playerStats} numberOfLines={1}>{player1.goals}</Text>
                     </View>
                     <View style={styles.separator}/>
                     <View style={styles.playerContainer}>
-                        <Image style={styles.playerImage} source={{  uri: 'https://picsum.photos/200/200' }} />
-                        <Text style={styles.playerName} numberOfLines={1}>{player2}</Text>
+                        <Image style={styles.playerImage} source={{  uri: player2.photo }} />
+                        <Text style={styles.playerName} numberOfLines={1}>{player2.name}</Text>
                         <Text style={styles.playerStatsTitle}>Position</Text>
-                        <Text style={styles.playerStats} numberOfLines={1}>Defender</Text>
+                        <Text style={styles.playerStats} numberOfLines={1}>{player2.position}</Text>
                         <Text style={styles.playerStatsTitle}>Age</Text>
-                        <Text style={styles.playerStats} numberOfLines={1}>23</Text>
+                        <Text style={styles.playerStats} numberOfLines={1}>{Math.floor((new Date() - new Date(player2.date_of_birth)) / 31557600000)}</Text>
                         <Text style={styles.playerStatsTitle}>Height</Text>
-                        <Text style={styles.playerStats} numberOfLines={1}>5' 11"</Text>
+                        <Text style={styles.playerStats} numberOfLines={1}>{player2.height} cm</Text>
                         <Text style={styles.playerStatsTitle}>Weight</Text>
-                        <Text style={styles.playerStats} numberOfLines={1}>80kg</Text>
+                        <Text style={styles.playerStats} numberOfLines={1}>{player2.weight} kg</Text>
                         <Text style={styles.playerStatsTitle}>Goals</Text>
-                        <Text style={styles.playerStats} numberOfLines={1}>190</Text>
+                        <Text style={styles.playerStats} numberOfLines={1}>{player2.goals}</Text>
                     </View>
                 </View>
             </View>
