@@ -16,9 +16,13 @@ import axios from "axios";
 import {URLS} from "../../config/urls";
 import {isLoading} from "expo-font";
 
-function AddPlayer({navigation}){
+function AddPlayer({navigation}) {
 
-    const categories = [
+    const [page1, setPage1] = useState(true);
+
+    const categories = [];
+
+    const screen1 = [
         "Name",
         "Nickname",
         "Gender",
@@ -28,7 +32,8 @@ function AddPlayer({navigation}){
         "Team",
         "Shirt_number",
         "Position",
-
+    ];
+    const screen2 = [
         "Aerial_duels_won",
         "Appearances",
         "Assists_intentional",
@@ -118,9 +123,9 @@ function AddPlayer({navigation}){
     const [isLoading, setIsLoading] = useState(false);
 
     const handleInputChange = (category, value) => {
-        if(!(/^[a-zA-Z]+$/.test(value))) value = parseInt(value);
+        if (!(/^[a-zA-Z]+$/.test(value))) value = parseInt(value);
         console.log(value)
-        setFormData({ ...formData, [category]: value });
+        setFormData({...formData, [category]: value});
     };
 
     const handleSubmit = () => {
@@ -144,47 +149,77 @@ function AddPlayer({navigation}){
     };
 
     const addGender = (category, value) => {
-        setFormData({ ...formData, [category]: value });
+        setFormData({...formData, [category]: value});
     }
 
-    const goToTop = () =>{
-        _scrollView.current.scrollTo({y:0});
+    const goToTop = () => {
+        _scrollView.current.scrollTo({y: 0});
     }
 
-    return(
+    return (
         <SafeAreaView style={[styles.container, {marginTop: StatusBar.currentHeight}]}>
             <Header style={styles.header} navigation={navigation}/>
             <View style={styles.contentContainer}>
                 <Text style={styles.title}>Add a player</Text>
                 <ScrollView style={styles.scrollView} ref={_scrollView}>
-                    {categories.map((category) => (
-                        <TextInput
-                            key={category}
-                            style={styles.input}
-                            placeholder={category.replace(/_/g, " ")}
-                            placeholderTextColor={"#9f9f9f"}
-                            keyboardType="numeric"
-                            onChangeText={(value) => handleInputChange(category, value)}
-                        />
+                    {page1 && screen1.map((category) => (
+                        <>
+                            <TextInput
+                                key={category}
+                                style={styles.input}
+                                placeholder={category.replace(/_/g, " ")}
+                                placeholderTextColor={"#9f9f9f"}
+                                keyboardType="numeric"
+                                onChangeText={(value) => handleInputChange(category, value)}
+                            />
+                        </>
                     ))}
-                    <TextInput
-                        style={styles.input}
-                        placeholder="gender"
-                        onChangeText={(value) => addGender("gender", value)}
-                    />
-                    <View>
-                        <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-                            {isLoading?<ActivityIndicator color={'#333'} size={"small"} />:
-                                <Text style={styles.buttonText}>Submit</Text>}
-                        </TouchableOpacity>
-                        <View style={styles.predictedPositionsContainer}>
-                            <Text style={styles.predictedPositionsTitle}>Predicted Position:</Text>
-                            <Text style={styles.predictedPosition}>{predictedPosition}</Text>
-                        </View>
-                        <TouchableOpacity style={styles.goToTop} onPress={goToTop}>
-                            <Text style={styles.buttonText}>Go to top</Text>
-                        </TouchableOpacity>
-                    </View>
+
+                    {page1 &&
+                        <>
+                            <TextInput
+                                style={styles.input}
+                                placeholder="gender"
+                                onChangeText={(value) => addGender("gender", value)}
+                            />
+                            <TouchableOpacity style={styles.pageButtons} onPress={()=>setPage1(false)}>
+                                    <Text style={styles.buttonText}>Next page</Text>
+                            </TouchableOpacity>
+                        </>
+                    }
+
+                    {!page1 && screen2.map((category) => (
+                        <>
+                            <TextInput
+                                key={category}
+                                style={styles.input}
+                                placeholder={category.replace(/_/g, " ")}
+                                placeholderTextColor={"#9f9f9f"}
+                                keyboardType="numeric"
+                                onChangeText={(value) => handleInputChange(category, value)}
+                            />
+                        </>
+                    ))}
+
+                    {!page1 &&
+                        <>
+                            <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+                                {isLoading ? <ActivityIndicator color={'#333'} size={"small"}/> :
+                                    <Text style={styles.buttonText}>Submit</Text>}
+                            </TouchableOpacity>
+                            <View style={styles.predictedPositionsContainer}>
+                                <Text style={styles.predictedPositionsTitle}>Predicted Position:</Text>
+                                <Text style={styles.predictedPosition}>{predictedPosition}</Text>
+                            </View>
+                            <TouchableOpacity style={styles.pageButtons} onPress={()=>setPage1(true)}>
+                                    <Text style={styles.buttonText}>Back</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.goToTop} onPress={goToTop}>
+                                <Text style={styles.buttonText}>Go to top</Text>
+                            </TouchableOpacity>
+                        </>
+                    }
+
                 </ScrollView>
             </View>
         </SafeAreaView>
@@ -233,6 +268,15 @@ const styles = StyleSheet.create({
         marginBottom: 16,
         paddingHorizontal: 16,
         paddingVertical: 10
+    },
+    pageButtons:{
+        width: '40%',
+        alignSelf: 'center',
+        backgroundColor: Colors.light,
+        borderRadius: 15,
+        marginTop: 30,
+        paddingHorizontal: 10,
+        paddingVertical: 5
     },
     buttonText: {
         color: Colors.dark,

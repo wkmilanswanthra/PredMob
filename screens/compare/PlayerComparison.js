@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {StyleSheet, View, Text, StatusBar, SafeAreaView, TouchableOpacity} from 'react-native';
 import SelectDropdown from 'react-native-select-dropdown'
 import axios from "axios";
@@ -10,24 +10,25 @@ import {URLS} from "../../config/urls";
 
 function PlayerComparison({navigation}) {
 
-    const [players, setPlayers] = useState(["no data"])
+    const {players} = useContext(authContext)
+
+    const [list, setList] = useState([{
+        name: 'No players available'
+    }])
     const [player1, setPlayer1] = useState(null);
     const [player2, setPlayer2] = useState(null);
 
     useEffect(() => {
-        axios({
-            method: 'get',
-            url: URLS.COMPARISON,
-        }).then((response) => {
-            setPlayers(response.data.players[0])
-        }).catch((error) => {
-            console.log(error)
-        });
+        let x = []
+        for (let i = 0; i < players.length; i++) {
+            x.push(players[i].name)
+        }
+        setList(x)
     }, []);
 
     const handleCompare = () => {
-        if ((player1 && player2) && (player1 !== player2) ) {
-            navigation.navigate('playerComparisonSelect', {player1: players[player1], player2: players[player2]})
+        if ((player1!==null) & (player2!==null) && (player1 !== player2) ) {
+            navigation.navigate('playerComparisonSelect', {player1: players[player1-1], player2: players[player2-1]})
         } else {
             alert('Please select two unique players to compare')
         }
@@ -46,9 +47,9 @@ function PlayerComparison({navigation}) {
                         buttonTextStyle={styles.buttonText}
                         searchPlaceHolder={'Search'}
                         search={true}
-                        data={players.map(player => player.name)}
+                        data={list}
                         onSelect={(selectedItem, index) => {
-                            setPlayer1(index)
+                            setPlayer1(index+1)
                         }}
                         buttonTextAfterSelection={(selectedItem, index) => {
                             return selectedItem
@@ -63,9 +64,10 @@ function PlayerComparison({navigation}) {
                         buttonTextStyle={styles.buttonText}
                         searchPlaceHolder={'Search'}
                         search={true}
-                        data={players.map(player => player.name)}
+                        data={list}
                         onSelect={(selectedItem, index) => {
                            setPlayer2(index)
+                            console.log(index+1)
                         }}
                         buttonTextAfterSelection={(selectedItem, index) => {
                             return selectedItem

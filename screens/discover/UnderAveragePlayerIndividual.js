@@ -8,6 +8,7 @@ import {authContext} from "../../context/AuthContext";
 function UnderAveragePLayersIndividual({navigation, route}) {
 
     const {altData} = React.useContext(authContext)
+    console.log(altData.goalkeepers.bottom)
 
     const positionDataMap = {
         'Goalkeeper': altData.goalkeepers.bottom,
