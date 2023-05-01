@@ -14,18 +14,47 @@ import Colors from "../../assets/colors/Colors";
 import Header from "../../components/Header";
 import axios from "axios";
 import {URLS} from "../../config/urls";
-import {isLoading} from "expo-font";
+import SelectDropdown from "react-native-select-dropdown";
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 function AddPlayer({navigation}) {
 
     const [page1, setPage1] = useState(true);
+    const [open, setOpen] = useState(false)
+    const [dob, setDob] = useState("Date of birth")
+    const [predictedPosition, setPredictedPosition] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
+    const _scrollView = React.useRef(null);
+    const _dob = React.useRef(null);
 
-    const categories = [];
+    const gender = ["male", "female"];
+    const position = ['Goalkeeper', 'Defender', 'Midfielder', 'Forward'];
+    const team = [
+        "Athletic Club",
+        "Atletico de Madrid",
+        "Celta de Vigo",
+        "Espanyol",
+        "Barcelona",
+        "Sevilla",
+        "Mallorca",
+        "Rayo Vallecano",
+        "Real Betis",
+        "Real Madrid",
+        "Real Sociedad",
+        "Valencia CF",
+        "Real Valladolid",
+        "Villarreal",
+        "Osasuna",
+        "Elche",
+        "Getafe",
+        "Almeria",
+        "Cadiz",
+        "Girona",
+    ]
 
     const screen1 = [
         "Name",
         "Nickname",
-        "Gender",
         "Date_of_birth",
         "Weight",
         "Height",
@@ -71,12 +100,10 @@ function AddPlayer({navigation}) {
         "Yellow_cards",
     ];
 
-    const _scrollView = React.useRef(null);
 
     const [formData, setFormData] = useState({
         Name: "",
         Nickname: "",
-        Gender: "",
         Date_of_birth: "",
         Weight: 0,
         Height: 0,
@@ -119,12 +146,11 @@ function AddPlayer({navigation}) {
         Unsuccessful_short_passes: 0,
         Yellow_cards: 0,
     });
-    const [predictedPosition, setPredictedPosition] = useState("");
-    const [isLoading, setIsLoading] = useState(false);
 
     const handleInputChange = (category, value) => {
-        if (!(/^[a-zA-Z]+$/.test(value))) value = parseInt(value);
-        console.log(value)
+        console.log(category,": ",value)
+        if ((/^d+$/.test(value))) value = parseInt(value);
+        setOpen(false)
         setFormData({...formData, [category]: value});
     };
 
@@ -156,34 +182,91 @@ function AddPlayer({navigation}) {
         _scrollView.current.scrollTo({y: 0});
     }
 
+    console.log(open)
+
     return (
         <SafeAreaView style={[styles.container, {marginTop: StatusBar.currentHeight}]}>
             <Header style={styles.header} navigation={navigation}/>
             <View style={styles.contentContainer}>
                 <Text style={styles.title}>Add a player</Text>
                 <ScrollView style={styles.scrollView} ref={_scrollView}>
-                    {page1 && screen1.map((category) => (
+                    {page1 && screen1.map((category, index) => (
                         <>
-                            <TextInput
-                                key={category}
-                                style={styles.input}
-                                placeholder={category.replace(/_/g, " ")}
-                                placeholderTextColor={"#9f9f9f"}
-                                keyboardType="numeric"
-                                onChangeText={(value) => handleInputChange(category, value)}
-                            />
+                            {(category !== "Position" && category !== "Team" && category !== "Date_of_birth") ?
+                                <TextInput
+                                    key={index}
+                                    style={styles.input}
+                                    placeholder={category.replace(/_/g, " ")}
+                                    placeholderTextColor={"#9f9f9f"}
+                                    keyboardType="text"
+                                    onChangeText={(value) => handleInputChange(category, value)}
+                                />
+                                :
+                                (
+                                    (category !== "Date_of_birth") ?
+                                        <SelectDropdown
+                                            key={index}
+                                            defaultButtonText={category}
+                                            buttonStyle={styles.Dropdown}
+                                            buttonTextStyle={styles.DropdownText}
+                                            data={category === "Position" ? position : team}
+                                            onSelect={(selectedItem, index) => {
+                                                handleInputChange(category, selectedItem)
+                                            }}
+                                            buttonTextAfterSelection={(selectedItem, index) => {
+                                                return selectedItem
+                                            }}
+                                            rowTextForSelection={(item, index) => {
+                                                return item
+                                            }}
+                                        />
+                                        :
+                                        <>
+                                            <TouchableOpacity key={index} style={styles.input} onPress={() => {
+                                                setOpen(!open)
+                                            }}>
+                                                <Text>{dob}</Text>
+                                            </TouchableOpacity>
+                                            {open &&
+                                                <DateTimePicker
+                                                    testID="dateTimePicker"
+                                                    value={new Date()}
+                                                    mode={'date'}
+                                                    onChange={(e, date) => {
+                                                        handleInputChange(category, new Date(e.nativeEvent.timestamp).toISOString().split('T')[0])
+                                                        try {
+                                                            setDob(date.toDateString())
+                                                        } catch (e) {
+                                                            console.log(e)
+                                                        }
+                                                    }}
+                                                />
+                                            }
+                                        </>
+                                )
+                            }
                         </>
                     ))}
 
                     {page1 &&
                         <>
-                            <TextInput
-                                style={styles.input}
-                                placeholder="gender"
-                                onChangeText={(value) => addGender("gender", value)}
+                            <SelectDropdown
+                                defaultButtonText={'Gender'}
+                                buttonStyle={styles.Dropdown}
+                                buttonTextStyle={styles.DropdownText}
+                                data={gender}
+                                onSelect={(selectedItem, index) => {
+                                    addGender("gender", selectedItem)
+                                }}
+                                buttonTextAfterSelection={(selectedItem, index) => {
+                                    return selectedItem
+                                }}
+                                rowTextForSelection={(item, index) => {
+                                    return item
+                                }}
                             />
-                            <TouchableOpacity style={styles.pageButtons} onPress={()=>setPage1(false)}>
-                                    <Text style={styles.buttonText}>Next page</Text>
+                            <TouchableOpacity style={styles.pageButtons} onPress={() => setPage1(false)}>
+                                <Text style={styles.buttonText}>Next page</Text>
                             </TouchableOpacity>
                         </>
                     }
@@ -211,8 +294,8 @@ function AddPlayer({navigation}) {
                                 <Text style={styles.predictedPositionsTitle}>Predicted Position:</Text>
                                 <Text style={styles.predictedPosition}>{predictedPosition}</Text>
                             </View>
-                            <TouchableOpacity style={styles.pageButtons} onPress={()=>setPage1(true)}>
-                                    <Text style={styles.buttonText}>Back</Text>
+                            <TouchableOpacity style={styles.pageButtons} onPress={() => setPage1(true)}>
+                                <Text style={styles.buttonText}>Back</Text>
                             </TouchableOpacity>
                             <TouchableOpacity style={styles.goToTop} onPress={goToTop}>
                                 <Text style={styles.buttonText}>Go to top</Text>
@@ -269,7 +352,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 16,
         paddingVertical: 10
     },
-    pageButtons:{
+    pageButtons: {
         width: '40%',
         alignSelf: 'center',
         backgroundColor: Colors.light,
@@ -316,6 +399,21 @@ const styles = StyleSheet.create({
         marginBottom: 16,
         paddingHorizontal: 16,
         paddingVertical: 10
+    },
+    Dropdown: {
+        backgroundColor: Colors.light,
+        borderRadius: 10,
+        marginBottom: 20,
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'flex-start',
+    },
+    DropdownText: {
+        color: '#9f9f9f',
+        fontFamily: 'Poppins',
+        fontSize: 14,
+        textAlign: 'left',
+        marginLeft: 10,
     }
 
 });

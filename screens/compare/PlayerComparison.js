@@ -12,9 +12,7 @@ function PlayerComparison({navigation}) {
 
     const {players} = useContext(authContext)
 
-    const [list, setList] = useState([{
-        name: 'No players available'
-    }])
+    const [list, setList] = useState(['No players available'])
     const [player1, setPlayer1] = useState(null);
     const [player2, setPlayer2] = useState(null);
 
@@ -24,6 +22,7 @@ function PlayerComparison({navigation}) {
             x.push(players[i].name)
         }
         setList(x)
+        console.log(list)
     }, []);
 
     const handleCompare = () => {
